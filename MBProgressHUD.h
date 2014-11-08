@@ -57,6 +57,12 @@ typedef enum {
 	MBProgressHUDAnimationZoomIn
 } MBProgressHUDAnimation;
 
+typedef enum {
+    MBProgressHUDShowSuccess,
+    MBProgressHUDShowError
+} MBProgressHUDShowType;
+
+
 
 #ifndef MB_INSTANCETYPE
 #if __has_feature(objc_instancetype)
@@ -85,7 +91,8 @@ typedef enum {
 #endif
 
 #if NS_BLOCKS_AVAILABLE
-typedef void (^MBProgressHUDCompletionBlock)();
+typedef void (^MBProgressHUDCompletionBlock)();///完成回调
+typedef void (^MBProgressHUDCancelBlock)();///取消回调
 #endif
 
 
@@ -109,6 +116,116 @@ typedef void (^MBProgressHUDCompletionBlock)();
  * - If also the detailsLabelText property is set then another label is placed below the first label.
  */
 @interface MBProgressHUD : UIView
+
+
+
++ (MB_INSTANCETYPE)showHUDAddToView:(UIView *)view labelText:(NSString *)labelText detailsLabelText:(NSString *)detailsLabelText mode:(MBProgressHUDMode)mode animationType:(MBProgressHUDAnimation)animationType completionBlock:(MBProgressHUDCompletionBlock)completion afterDelay:(NSTimeInterval)delay animated:(BOOL)animated;
+
+/**
+ *	HUD加载到指定view上面,多长时间之后自动消失,是否取消按钮
+ *  @param  labelText     提示文字
+ *  @param  detailsLabelText 提示详细信息
+ *  @param  mode     提示框的类型
+ *  @param  animationType 动画类型
+ *  @param  isShow    是否显示取消按钮
+ *  @param  cancelBlock  取消回调方法
+ *  @param  completion   完成回调方法
+ *  @param  delay     显示多久之后自动消失
+ *  @param  animated     是否动画
+ *  @return HUD提示框
+ */
++ (MB_INSTANCETYPE)showHUDAddToView:(UIView *)view labelText:(NSString *)labelText detailsLabelText:(NSString *)detailsLabelText mode:(MBProgressHUDMode)mode animationType:(MBProgressHUDAnimation)animationType isShowCancelButton:(BOOL)isShow cacelBlock:(MBProgressHUDCancelBlock)cancelBlock completionBlock:(MBProgressHUDCompletionBlock)completion afterDelay:(NSTimeInterval)delay animated:(BOOL)animated;
+
+/**
+ *	HUD记载到window上面,多长时间之后自动消失
+ *  @param  labelText     提示文字
+ *  @param  detailsLabelText 提示详细信息
+ *  @param  mode     提示框的类型
+ *  @param  animationType 动画类型
+ *  @param  completion   完成回调方法
+ *  @param  delay     显示多久之后自动消失
+ *  @param  animated     是否动画
+ *  @return HUD提示框
+ */
++ (MB_INSTANCETYPE)showHUDonWindowWithLabelText:(NSString *)labelText detailsLabelText:(NSString *)detailsLabelText mode:(MBProgressHUDMode)mode animationType:(MBProgressHUDAnimation)animationType completionBlock:(MBProgressHUDCompletionBlock)completion afterDelay:(NSTimeInterval)delay animated:(BOOL)animated;
+
+/**
+ *	HUD记载到window上面,多长时间之后自动消失,是否有取消按钮
+ *  @param  labelText     提示文字
+ *  @param  detailsLabelText 提示详细信息
+ *  @param  mode     提示框的类型
+ *  @param  animationType 动画类型
+ *  @param  isShow    是否显示取消按钮
+ *  @param  cancelBlock  取消回调方法
+ *  @param  completion   完成回调方法
+ *  @param  delay     显示多久之后自动消失
+ *  @param  animated     是否动画
+ *  @return HUD提示框
+ */
++ (MB_INSTANCETYPE)showHUDonWindowWithLabelText:(NSString *)labelText detailsLabelText:(NSString *)detailsLabelText mode:(MBProgressHUDMode)mode animationType:(MBProgressHUDAnimation)animationType isShowCancelButton:(BOOL)isShow cacelBlock:(MBProgressHUDCancelBlock)cancelBlock completionBlock:(MBProgressHUDCompletionBlock)completion afterDelay:(NSTimeInterval)delay animated:(BOOL)animated;
+
+
++ (MB_INSTANCETYPE)showHUDAddToView:(UIView *)view showType:(MBProgressHUDShowType)type labelText:(NSString *)labelText detailsLabelText:(NSString *)detailsLabelText completionBlock:(MBProgressHUDCompletionBlock)completion afterDelay:(NSTimeInterval)delay animated:(BOOL)animated;
+
++ (MB_INSTANCETYPE)showHUDonWindowshowType:(MBProgressHUDShowType)type labelText:(NSString *)labelText detailsLabelText:(NSString *)detailsLabelText completionBlock:(MBProgressHUDCompletionBlock)completion afterDelay:(NSTimeInterval)delay animated:(BOOL)animated;
+
+/**
+ *	HUD加载到自定view上面
+ *  @param  labelText     提示文字
+ *  @param  detailsLabelText 提示详细信息
+ *  @param  mode     提示框的类型
+ *  @param  animationType 动画类型
+ *  @param  completion   完成回调方法
+ *  @param  animated     是否动画
+ *  @return HUD提示框
+ */
++ (MB_INSTANCETYPE)showHUDAddToView:(UIView *)view labelText:(NSString *)labelText detailsLabelText:(NSString *)detailsLabelText mode:(MBProgressHUDMode)mode animationType:(MBProgressHUDAnimation)animationType completionBlock:(MBProgressHUDCompletionBlock)completion animated:(BOOL)animated;
+/**
+ *	HUD加载到自定view上面,是否有取消按钮
+ *  @param  labelText     提示文字
+ *  @param  detailsLabelText 提示详细信息
+ *  @param  mode     提示框的类型
+ *  @param  animationType 动画类型
+ *  @param  isShow    是否显示取消按钮
+ *  @param  cancelBlock  取消回调方法
+ *  @param  completion   完成回调方法
+ *  @param  animated     是否动画
+ *  @return HUD提示框
+ */
++ (MB_INSTANCETYPE)showHUDAddToView:(UIView *)view labelText:(NSString *)labelText detailsLabelText:(NSString *)detailsLabelText mode:(MBProgressHUDMode)mode animationType:(MBProgressHUDAnimation)animationType isShowCancelButton:(BOOL)isShow cacelBlock:(MBProgressHUDCancelBlock)cancelBlock completionBlock:(MBProgressHUDCompletionBlock)completion animated:(BOOL)animated;
+
+
+/**
+ *	HUD加载到window上面
+ *  @param  labelText     提示文字
+ *  @param  detailsLabelText 提示详细信息
+ *  @param  mode     提示框的类型
+ *  @param  animationType 动画类型
+ *  @param  completion   完成回调方法
+ *  @param  animated     是否动画
+ *  @return HUD提示框
+ */
++ (MB_INSTANCETYPE)showHUDonWindowWithLabelText:(NSString *)labelText detailsLabelText:(NSString *)detailsLabelText mode:(MBProgressHUDMode)mode animationType:(MBProgressHUDAnimation)animationType completionBlock:(MBProgressHUDCompletionBlock)completion animated:(BOOL)animated;
+
+/**
+ *	HUD记载到window上面，是否有取消按钮
+ *  @param  labelText     提示文字
+ *  @param  detailsLabelText 提示详细信息
+ *  @param  mode     提示框的类型
+ *  @param  animationType 动画类型
+ *  @param  isShow    是否显示取消按钮
+ *  @param  cancelBlock  取消回调方法
+ *  @param  completion   完成回调方法
+ *  @param  animated     是否动画
+ *  @return HUD提示框
+ */
++ (MB_INSTANCETYPE)showHUDonWindowWithLabelText:(NSString *)labelText detailsLabelText:(NSString *)detailsLabelText mode:(MBProgressHUDMode)mode animationType:(MBProgressHUDAnimation)animationType isShowCancelButton:(BOOL)isShow cacelBlock:(MBProgressHUDCancelBlock)cancelBlock completionBlock:(MBProgressHUDCompletionBlock)completion animated:(BOOL)animated;
+
+
++ (BOOL)hiddeHUDForWindowAnimation:(BOOL)animation;
+
+
+
 
 /**
  * Creates a new HUD, adds it to provided view and shows it. The counterpart to this method is hideHUDForView:animated:.
@@ -273,6 +390,10 @@ typedef void (^MBProgressHUDCompletionBlock)();
  * A block that gets called after the HUD was completely hidden.
  */
 @property (copy) MBProgressHUDCompletionBlock completionBlock;
+/**
+ *	取消回调
+ */
+@property (copy) MBProgressHUDCancelBlock cancelBlock;
 
 #endif
 

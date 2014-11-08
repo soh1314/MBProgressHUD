@@ -36,8 +36,6 @@
 - (void)viewDidLoad {
 	
 	
-	///test
-	
 	UIView *content = [[self.view subviews] objectAtIndex:0];
 #if SCREENSHOT_MODE
 	[content.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
@@ -67,6 +65,17 @@
 #pragma mark - Actions
 
 - (IBAction)showSimple:(id)sender {
+	
+	
+	[MBProgressHUD showHUDAddToView:self.navigationController.view labelText:@"loading" detailsLabelText:@"loading detail" mode:MBProgressHUDModeIndeterminate animationType:MBProgressHUDAnimationZoomOut isShowCancelButton:YES cacelBlock:^{
+		NSLog(@"取消");
+	} completionBlock:^{
+		
+	} afterDelay:5 animated:YES];
+	
+	return;
+	
+	//////////////////
 	// The hud will dispable all input on the view (use the higest view possible in the view hierarchy)
 	HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
 	[self.navigationController.view addSubview:HUD];

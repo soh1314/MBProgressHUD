@@ -70,6 +70,10 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 @property (atomic, MB_STRONG) NSTimer *minShowTimer;
 @property (atomic, MB_STRONG) NSDate *showStarted;
 
+///添加取消按钮
+@property (atomic, assign) BOOL isShowCancelButton;
+@property (atomic, MB_STRONG) UIButton *cancelButton;
+@property (atomic, MB_STRONG) UIView * shieldTouchView;///屏蔽touch的view
 
 @end
 
@@ -111,7 +115,250 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 @synthesize completionBlock;
 #endif
 
+
+
+#pragma mark - custom method
+
++ (MB_INSTANCETYPE )showHUDAddToView:(UIView *)view labelText:(NSString *)labelText detailsLabelText:(NSString *)detailsLabelText mode:(MBProgressHUDMode)mode animationType:(MBProgressHUDAnimation)animationType completionBlock:(MBProgressHUDCompletionBlock)completion afterDelay:(NSTimeInterval)delay animated:(BOOL)animated
+{
+    __autoreleasing MBProgressHUD * hud=[[MBProgressHUD alloc] initWithView:view];
+    hud.labelText=labelText;
+    hud.detailsLabelText=detailsLabelText;
+    hud.mode=mode;
+    hud.animationType=animationType;
+    hud.completionBlock=completion;
+    
+    [view  addSubview:hud];
+    
+    [hud show:animated];
+    
+    [hud hide:animated afterDelay:delay];
+    
+    return hud;
+}
+
++ (MB_INSTANCETYPE)showHUDAddToView:(UIView *)view labelText:(NSString *)labelText detailsLabelText:(NSString *)detailsLabelText mode:(MBProgressHUDMode)mode animationType:(MBProgressHUDAnimation)animationType isShowCancelButton:(BOOL)isShow cacelBlock:(MBProgressHUDCancelBlock)cancelBlock completionBlock:(MBProgressHUDCompletionBlock)completion afterDelay:(NSTimeInterval)delay animated:(BOOL)animated
+{
+    __autoreleasing MBProgressHUD * hud=[[MBProgressHUD alloc] initWithView:view];
+    hud.isShowCancelButton=isShow;
+    hud.cancelBlock=cancelBlock;
+    hud.labelText=labelText;
+    hud.detailsLabelText=detailsLabelText;
+    hud.mode=mode;
+    hud.animationType=animationType;
+    hud.completionBlock=completion;
+    
+    [view  addSubview:hud];
+    
+    [hud show:animated];
+    
+    [hud hide:animated afterDelay:delay];
+    
+    return hud;
+}
+
++ (MB_INSTANCETYPE)showHUDonWindowWithLabelText:(NSString *)labelText detailsLabelText:(NSString *)detailsLabelText mode:(MBProgressHUDMode)mode animationType:(MBProgressHUDAnimation)animationType completionBlock:(MBProgressHUDCompletionBlock)completion afterDelay:(NSTimeInterval)delay animated:(BOOL)animated
+{
+    
+    UIWindow *kWindow=[[[UIApplication sharedApplication] delegate] window];
+    
+    
+    __autoreleasing MBProgressHUD * hud=[[MBProgressHUD alloc] initWithView:kWindow];
+    hud.labelText=labelText;
+    hud.detailsLabelText=detailsLabelText;
+    hud.mode=mode;
+    hud.animationType=animationType;
+    hud.completionBlock=completion;
+    
+    [kWindow  addSubview:hud];
+    
+    [hud show:animated];
+    
+    [hud hide:animated afterDelay:delay];
+    
+    return hud;
+    
+}
+
++ (MB_INSTANCETYPE)showHUDonWindowWithLabelText:(NSString *)labelText detailsLabelText:(NSString *)detailsLabelText mode:(MBProgressHUDMode)mode animationType:(MBProgressHUDAnimation)animationType isShowCancelButton:(BOOL)isShow cacelBlock:(MBProgressHUDCancelBlock)cancelBlock completionBlock:(MBProgressHUDCompletionBlock)completion afterDelay:(NSTimeInterval)delay animated:(BOOL)animated
+{
+    UIWindow *kWindow=[[[UIApplication sharedApplication] delegate] window];
+    
+    
+    __autoreleasing MBProgressHUD * hud=[[MBProgressHUD alloc] initWithView:kWindow];
+    hud.isShowCancelButton=isShow;
+    hud.cancelBlock=cancelBlock;
+    hud.labelText=labelText;
+    hud.detailsLabelText=detailsLabelText;
+    hud.mode=mode;
+    hud.animationType=animationType;
+    hud.completionBlock=completion;
+    
+    [kWindow  addSubview:hud];
+    
+    [hud show:animated];
+    
+    [hud hide:animated afterDelay:delay];
+    
+    return hud;
+}
+
+
++ (MB_INSTANCETYPE)showHUDAddToView:(UIView *)view showType:(MBProgressHUDShowType)type labelText:(NSString *)labelText detailsLabelText:(NSString *)detailsLabelText completionBlock:(MBProgressHUDCompletionBlock)completion afterDelay:(NSTimeInterval)delay animated:(BOOL)animated
+{
+    
+    
+    __autoreleasing MBProgressHUD * hud=[[MBProgressHUD alloc] initWithView:view];
+    
+    hud.labelText=labelText;
+    hud.mode=MBProgressHUDModeCustomView;
+    hud.detailsLabelText=detailsLabelText;
+    UIImage *showImage=nil;
+    if (type==MBProgressHUDShowSuccess)
+    {
+        showImage=[UIImage imageNamed:@"MBProgressHUD.bundle/success.png"];
+    }
+    else{
+        showImage=[UIImage imageNamed:@"MBProgressHUD.bundle/error.png"];
+    }
+    
+    __autoreleasing UIImageView * imageView=[[UIImageView alloc] initWithImage:showImage];
+    
+    hud.customView=imageView;
+    
+    hud.completionBlock=completion;
+    
+    [view  addSubview:hud];
+    
+    [hud show:animated];
+    
+    [hud hide:animated afterDelay:delay];
+    
+    return hud;
+}
+
++ (MB_INSTANCETYPE)showHUDonWindowshowType:(MBProgressHUDShowType)type labelText:(NSString *)labelText detailsLabelText:(NSString *)detailsLabelText  completionBlock:(MBProgressHUDCompletionBlock)completion afterDelay:(NSTimeInterval)delay animated:(BOOL)animated
+{
+    UIWindow *window=[[[UIApplication sharedApplication] delegate] window];
+    
+    
+    __autoreleasing MBProgressHUD * hud=[[MBProgressHUD alloc] initWithView:window];
+    
+    hud.labelText=labelText;
+    hud.mode=MBProgressHUDModeCustomView;
+    hud.detailsLabelText=detailsLabelText;
+    UIImage *showImage=nil;
+    if (type==MBProgressHUDShowSuccess)
+    {
+        showImage=[UIImage imageNamed:@"MBProgressHUD.bundle/success.png"];
+    }
+    else{
+        showImage=[UIImage imageNamed:@"MBProgressHUD.bundle/error.png"];
+    }
+    
+    __autoreleasing UIImageView * imageView=[[UIImageView alloc] initWithImage:showImage];
+    
+    hud.customView=imageView;
+    
+    hud.completionBlock=completion;
+    
+    [window  addSubview:hud];
+    
+    [hud show:animated];
+    
+    [hud hide:animated afterDelay:delay];
+    
+    return hud;
+    
+}
+
+
++ (MB_INSTANCETYPE)showHUDAddToView:(UIView *)view labelText:(NSString *)labelText detailsLabelText:(NSString *)detailsLabelText mode:(MBProgressHUDMode)mode animationType:(MBProgressHUDAnimation)animationType completionBlock:(MBProgressHUDCompletionBlock)completion animated:(BOOL)animated
+{
+    __autoreleasing MBProgressHUD * hud=[[MBProgressHUD alloc] initWithView:view];
+    
+    hud.labelText=labelText;
+    hud.detailsLabelText=detailsLabelText;
+    hud.mode=mode;
+    hud.animationType=animationType;
+    hud.completionBlock=completion;
+    
+    [view  addSubview:hud];
+    
+    [hud show:animated];
+    
+    return hud;
+}
+
++ (MB_INSTANCETYPE)showHUDAddToView:(UIView *)view labelText:(NSString *)labelText detailsLabelText:(NSString *)detailsLabelText mode:(MBProgressHUDMode)mode animationType:(MBProgressHUDAnimation)animationType isShowCancelButton:(BOOL)isShow cacelBlock:(MBProgressHUDCancelBlock)cancelBlock completionBlock:(MBProgressHUDCompletionBlock)completion animated:(BOOL)animated
+{
+    __autoreleasing MBProgressHUD * hud=[[MBProgressHUD alloc] initWithView:view];
+    hud.isShowCancelButton=isShow;
+    hud.cancelBlock=cancelBlock;
+    hud.labelText=labelText;
+    hud.detailsLabelText=detailsLabelText;
+    hud.mode=mode;
+    hud.animationType=animationType;
+    hud.completionBlock=completion;
+    
+    [view  addSubview:hud];
+    
+    [hud show:animated];
+    
+    return hud;
+}
+
+
++ (MB_INSTANCETYPE)showHUDonWindowWithLabelText:(NSString *)labelText detailsLabelText:(NSString *)detailsLabelText mode:(MBProgressHUDMode)mode animationType:(MBProgressHUDAnimation)animationType completionBlock:(MBProgressHUDCompletionBlock)completion animated:(BOOL)animated
+{
+    UIWindow *kWindow=[[[UIApplication sharedApplication] delegate] window];
+    
+    __autoreleasing MBProgressHUD * hud=[[MBProgressHUD alloc] initWithView:kWindow];
+    hud.labelText=labelText;
+    hud.detailsLabelText=detailsLabelText;
+    hud.mode=mode;
+    hud.animationType=animationType;
+    hud.completionBlock=completion;
+    
+    [kWindow  addSubview:hud];
+    
+    [hud show:animated];
+    
+    return hud;
+}
+
++ (MB_INSTANCETYPE)showHUDonWindowWithLabelText:(NSString *)labelText detailsLabelText:(NSString *)detailsLabelText mode:(MBProgressHUDMode)mode animationType:(MBProgressHUDAnimation)animationType isShowCancelButton:(BOOL)isShow cacelBlock:(MBProgressHUDCancelBlock)cancelBlock completionBlock:(MBProgressHUDCompletionBlock)completion animated:(BOOL)animated
+{
+    UIWindow *kWindow=[[[UIApplication sharedApplication] delegate] window];
+    
+    __autoreleasing MBProgressHUD * hud=[[MBProgressHUD alloc] initWithView:kWindow];
+    hud.isShowCancelButton=isShow;
+    hud.cancelBlock=cancelBlock;
+    hud.labelText=labelText;
+    hud.detailsLabelText=detailsLabelText;
+    hud.mode=mode;
+    hud.animationType=animationType;
+    hud.completionBlock=completion;
+    
+    [kWindow  addSubview:hud];
+    
+    [hud show:animated];
+    
+    return hud;
+}
+
+
+
++ (BOOL)hiddeHUDForWindowAnimation:(BOOL)animation
+{
+    UIWindow *kWindow=[[[UIApplication sharedApplication] delegate] window];
+    return [[self class] hideHUDForView:kWindow animated:animation];
+}
+
+
+
 #pragma mark - Class methods
+
 
 + (MB_INSTANCETYPE)showHUDAddedTo:(UIView *)view animated:(BOOL)animated {
 	MBProgressHUD *hud = [[self alloc] initWithView:view];
@@ -201,6 +448,10 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 		taskInProgress = NO;
 		rotationTransform = CGAffineTransformIdentity;
 		
+        ///是否显示取消按钮
+        _isShowCancelButton=NO;
+        [self setupshieldTouchView];
+        
 		[self setupLabels];
 		[self updateIndicators];
 		[self registerForKVO];
@@ -523,6 +774,55 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 	}
 }
 
+
+- (void)setupshieldTouchView
+{
+    _shieldTouchView=[[UIView alloc] initWithFrame:self.bounds];
+    [self addSubview:self.shieldTouchView];
+    [self sendSubviewToBack:self.shieldTouchView];
+}
+
+- (void)setupCancelButton
+{
+    if (self.cancelButton) {
+        [self.cancelButton removeFromSuperview];
+        self.cancelButton=nil;
+    }
+    self.cancelButton=[UIButton buttonWithType:UIButtonTypeCustom];
+    [_cancelButton setTitle:@"取消" forState:UIControlStateNormal];
+    self.cancelButton.layer.masksToBounds=YES;
+    self.cancelButton.layer.cornerRadius=5;
+    UIImage * image=[[self class] getImageWithColor_hud:[UIColor colorWithRed:45.0/255.0 green:46.0/255.0 blue:48.0/255.0 alpha:0.9]];
+    [self.cancelButton setBackgroundImage:image forState:UIControlStateNormal];
+    [self.cancelButton setBackgroundImage:[[self class] getImageWithColor_hud:[[UIColor grayColor] colorWithAlphaComponent:0.9]] forState:UIControlStateHighlighted];
+    [self.cancelButton addTarget:self action:@selector(cancelButtonActionForHud:) forControlEvents:UIControlEventTouchUpInside];
+    [self  addSubview:self.cancelButton];
+    
+    
+}
+
+- (void)cancelButtonActionForHud:(id)sender
+{
+    self.cancelBlock();
+    [self hide:YES];
+}
+
++ (UIImage *)getImageWithColor_hud:(UIColor *)color {
+    CGRect rect = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillRect(context, rect);
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return image;
+}
+
+
+
 #pragma mark - Layout
 
 - (void)layoutSubviews {
@@ -661,6 +961,26 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 	CGContextFillPath(context);
 
 	UIGraphicsPopContext();
+    
+    
+    if (self.isShowCancelButton)
+    {
+        if (self.cancelButton==nil)
+        {
+            [self setupCancelButton];
+        }
+        self.cancelButton.frame=CGRectMake(boxRect.origin.x, boxRect.origin.y+boxRect.size.height+10, boxRect.size.width, 40);
+    }
+    else{
+        if (self.isShowCancelButton)
+        {
+            [self.cancelButton removeFromSuperview];
+            self.cancelButton=nil;
+        }
+    }
+    
+    
+    
 }
 
 #pragma mark - KVO
