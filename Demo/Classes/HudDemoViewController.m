@@ -34,6 +34,10 @@
 #pragma mark - Lifecycle methods
 
 - (void)viewDidLoad {
+	
+	
+	///test
+	
 	UIView *content = [[self.view subviews] objectAtIndex:0];
 #if SCREENSHOT_MODE
 	[content.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
